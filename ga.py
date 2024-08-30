@@ -4,6 +4,13 @@ import fitness
 from inputs import total_days
 
 
+# Seed 3 does pretty good
+seed = 7
+generations = 200
+crossover_rate = 0.7
+mutation_rate = 0.3
+
+
 def evaluate(individual):
     roster = fitness.chromosome_to_roster(individual)
     penalty = fitness.fitness_func(roster)
@@ -13,6 +20,8 @@ def evaluate(individual):
 
 
 def run_ga():
+    random.seed(seed)
+
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
     creator.create("Individual", list, fitness=creator.FitnessMin)
 
@@ -29,9 +38,8 @@ def run_ga():
 
     population = toolbox.population(n=500)
 
-    generations = 500
     for gen in range(generations):
-        offspring = algorithms.varAnd(population, toolbox, cxpb=0.7, mutpb=0.2)
+        offspring = algorithms.varAnd(population, toolbox, cxpb=crossover_rate, mutpb=mutation_rate)
         fits = toolbox.map(toolbox.evaluate, offspring)
         for fit, ind in zip(fits, offspring):
             ind.fitness.values = fit
