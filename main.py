@@ -8,7 +8,5 @@ def setup_solution():
 
 
 if __name__ == '__main__':
-    random.seed(3)
     ga.run_ga()
 
-    # Seed 3

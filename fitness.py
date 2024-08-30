@@ -1,7 +1,6 @@
+import copy
 from collections import Counter
-
 import inputs
-from inputs import *
 
 
 def fitness_func(primary_roster):
@@ -13,29 +12,11 @@ def fitness_func(primary_roster):
 
 
 def penalties_for_load(primary_roster):
-    target_days_per_dev = dict(available_days_per_dev)
-    for dev, days in target_days_per_dev.items():
-        target_days_per_dev[dev] = 0
-    calculate_target_days_for_devs(target_days_per_dev)
-    support_days_per_dev = dict(Counter(primary_roster))
+    allocated_days_per_dev = dict(Counter(primary_roster))
     penalty = 0
-    for dev, support_days in support_days_per_dev.items():
-        penalty += abs(support_days - target_days_per_dev[dev])
+    for dev, allocated_support_days in allocated_days_per_dev.items():
+        penalty += abs(allocated_support_days - inputs.target_days_per_dev[dev])
     return penalty
-
-
-def calculate_target_days_for_devs(target_days_per_dev):
-    available_days_per_dev_clone = available_days_per_dev.copy()
-    days_segments = list(set(available_days_per_dev_clone.values()))
-    days_segments.sort()
-    days_catered_for = 0
-    for segment in days_segments:
-        available_devs = [dev for dev, days in available_days_per_dev_clone.items() if days > 0]
-        segment -= days_catered_for
-        for dev in available_devs:
-            target_days_per_dev[dev] += round(segment / len(available_devs))
-            available_days_per_dev_clone[dev] -= segment
-        days_catered_for += segment
 
 
 def penalties_for_preference(primary_roster):
@@ -49,15 +30,15 @@ def penalties_for_preference(primary_roster):
 def penalties_for_spread(primary_roster):
     weighting = 0.5
     penalty = 0
-    ideal_spread = len(devs)
-    for dev in devs:
-        last_seen_index = -1
-        for index, name in enumerate(primary_roster):
+    ideal_spread = len(inputs.devs)
+    for dev in inputs.devs:
+        last_support_day = -1
+        for current_day, name in enumerate(primary_roster):
             if name == dev:
-                if last_seen_index > -1:
-                    current_spread = index - last_seen_index
+                if last_support_day > -1:
+                    current_spread = current_day - last_support_day
                     penalty += 0 if current_spread >= ideal_spread else (ideal_spread - current_spread)
-                last_seen_index = index
+                last_support_day = current_day
     penalty *= weighting
     return penalty
 
@@ -65,7 +46,7 @@ def penalties_for_spread(primary_roster):
 def chromosome_to_roster(chromosome):
     roster = []
     index = 0
-    available_devs_per_day = inputs.get_availability_dev()
+    available_devs_per_day = copy.deepcopy(inputs.available_devs_per_day)
     for codon in chromosome:
         available_devs = len(available_devs_per_day[index])
         if available_devs == 0:
@@ -74,6 +55,6 @@ def chromosome_to_roster(chromosome):
         dev = available_devs_per_day[index].pop(codon % available_devs)
         roster.append(dev)
         index += 1
-        if index == total_days:
+        if index == inputs.total_days:
             break
     return roster
