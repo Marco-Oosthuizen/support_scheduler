@@ -5,7 +5,7 @@ from inputs import total_days
 
 
 # Seed 3 does pretty good
-seed = 7
+seed = 3
 generations = 200
 crossover_rate = 0.7
 mutation_rate = 0.3
