@@ -15,6 +15,8 @@ def penalties_for_load(primary_roster, weight=1):
     allocated_days_per_dev = dict(Counter(primary_roster))
     penalty = 0
     for dev, allocated_support_days in allocated_days_per_dev.items():
+        if dev is None:
+            continue
         penalty += abs(allocated_support_days - inputs.target_days_per_dev[dev])
     return penalty * weight
 
@@ -42,16 +44,15 @@ def penalties_for_spread(primary_roster, weight=0.5):
 
 def chromosome_to_roster(chromosome):
     roster = []
-    index = 0
     available_devs_per_day = copy.deepcopy(inputs.available_devs_per_day)
-    for codon in chromosome:
+    for index in range(0, len(chromosome)):
+        codon = chromosome[index]
         available_devs = len(available_devs_per_day[index])
         if available_devs == 0:
             roster.append(None)
             continue
         dev = available_devs_per_day[index].pop(codon % available_devs)
         roster.append(dev)
-        index += 1
         if index == inputs.total_days:
             break
     return roster

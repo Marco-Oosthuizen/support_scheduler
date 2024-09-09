@@ -8,5 +8,5 @@ def setup_solution():
 
 
 if __name__ == '__main__':
-    ga.run_ga()
+    ga.generate_roster()
 
