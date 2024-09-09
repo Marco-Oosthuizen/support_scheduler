@@ -1,12 +1,14 @@
 import random
 from deap import creator, base, tools, algorithms
 import fitness
+import inputs
 from inputs import total_days
 
 
 # Seed 3 does pretty good
-seed = 7
+seed = 3
 generations = 200
+population_size = 500
 crossover_rate = 0.7
 mutation_rate = 0.3
 
@@ -19,12 +21,13 @@ def evaluate(individual):
     return penalty,
 
 
-def run_ga():
+def setup_ga():
     random.seed(seed)
-
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
     creator.create("Individual", list, fitness=creator.FitnessMin)
 
+
+def run_ga():
     toolbox = base.Toolbox()
 
     toolbox.register("attr_bool", random.randint, 0, 255)
@@ -36,7 +39,7 @@ def run_ga():
     toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
     toolbox.register("select", tools.selTournament, tournsize=2)
 
-    population = toolbox.population(n=500)
+    population = toolbox.population(n=population_size)
 
     for gen in range(generations):
         offspring = algorithms.varAnd(population, toolbox, cxpb=crossover_rate, mutpb=mutation_rate)
@@ -50,3 +53,18 @@ def run_ga():
     print('Best roster', best_roster)
     best_fitness = fitness.fitness_func(best_roster)
     print('Best fitness:', best_fitness)
+    return best_roster
+
+
+def generate_roster():
+    final_roster = []
+    setup_ga()
+    for dimension in range(0, inputs.roster_dimensions):
+        single_dimension_roster = run_ga()
+        for day in range(0, len(single_dimension_roster)):
+            dev = single_dimension_roster[day]
+            if dev is None:
+                continue
+            inputs.available_devs_per_day[day].remove(dev)
+        final_roster.append(single_dimension_roster)
+    print('Best multi-dimensional roster:', final_roster)

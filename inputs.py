@@ -1,5 +1,6 @@
 import copy
 
+
 def get_total_available_days_per_dev():
     d = dict(dev_availability)
     for dev, days in d.items():
@@ -52,6 +53,7 @@ dev_availability = {
     'Vuyani': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
 }
 
+roster_dimensions = 1
 devs = list(dev_availability.keys())
 total_available_days_per_dev = get_total_available_days_per_dev()
 available_devs_per_day = get_available_devs_per_day(total_days)
