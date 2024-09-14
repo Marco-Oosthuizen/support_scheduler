@@ -1,4 +1,6 @@
 import copy
+import calendar_manager
+from calendar_manager import day_to_index
 
 
 def get_total_available_slots_per_dev():
@@ -43,24 +45,26 @@ def get_target_slots_per_dev(available_slots_per_dev):
     return target_slots_per_dev
 
 
-def get_dev_availability(devs, leave_days_per_dev, total_slots):
-    for dev, leave_days in leave_days_per_dev.items():
-        for leave_range in leave_days:
+def get_dev_availability(devs, leave_days_per_dev, workdays):
+    dev_availability = {dev: [day for day in range(0, len(workdays))] for dev in devs}
 
-    return
+    for dev, leave_days in leave_days_per_dev.items():
+        for leave in leave_days:
+            if isinstance(leave, tuple):
+                start_date, end_date = leave
+                leave_range = calendar_manager.get_workdays_between(start_date, end_date)
+                for leave_day in leave_range:
+                    dev_availability[dev].remove(day_to_index(leave_day, workdays))
+            else:
+                dev_availability[dev].remove(day_to_index(leave, workdays))
+
+    return dev_availability
 
 
 total_slots = 19
-dev_availability = {
-    'William': [10, 11, 12, 13, 14, 15, 16, 17, 18],
-    'Mokgali': [0, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-    'Marco': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18],
-    'Natasha': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18],
-    'Juan': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-    'Vuyani': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-}
-
 roster_dimensions = 1
+dev_availability = {}
+
 devs = list(dev_availability.keys())
 total_available_slots_per_dev = get_total_available_slots_per_dev()
 available_devs_per_slot = get_available_devs_per_slot(total_slots)

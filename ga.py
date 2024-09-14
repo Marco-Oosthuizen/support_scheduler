@@ -13,6 +13,7 @@ crossover_rate = 0.7
 mutation_rate = 0.3
 
 
+
 def evaluate(individual):
     roster = fitness.chromosome_to_roster(individual)
     penalty = fitness.fitness_func(roster)

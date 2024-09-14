@@ -24,11 +24,11 @@ def get_workdays_between(start_date, end_date, return_as_num=False):
 
     while current_date <= end_date:
         if current_date.weekday() < 5 and current_date not in public_holidays:
-            workdays.append(current_date.day)
+            workdays.append(current_date)
         current_date += timedelta(days=1)
 
     return len(workdays) if return_as_num else workdays
 
 
-def day_to_index(day, workdays):
-    return workdays.index(day)
+def day_to_index(date, workdays):
+    return workdays.index(date)
