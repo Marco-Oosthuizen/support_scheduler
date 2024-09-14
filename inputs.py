@@ -1,16 +1,16 @@
 import copy
 import calendar_manager
-from calendar_manager import day_to_index
+from calendar_manager import convert_day_to_schedule_slot
 
 
-def get_total_available_slots_per_dev():
-    d = dict(dev_availability)
-    for dev, slots in d.items():
-        d[dev] = len(slots)
-    return d
+def get_total_available_slots_per_dev(dev_availability):
+    available_slots_per_dev = dict(dev_availability)
+    for dev, slots in available_slots_per_dev.items():
+        available_slots_per_dev[dev] = len(slots)
+    return available_slots_per_dev
 
 
-def get_available_devs_per_slot(total_slots):
+def get_available_devs_per_slot(total_slots, dev_availability):
     available_devs_per_slot = {}
     for dev, slots in dev_availability.items():
         for slot in slots:
@@ -27,8 +27,9 @@ def get_available_devs_per_slot(total_slots):
     return available_devs_per_slot_sorted_by_slot
 
 
-def get_target_slots_per_dev(available_slots_per_dev):
+def get_target_slots_per_dev(devs, dev_availability):
     target_slots_per_dev = {dev: 0 for dev in devs}
+    available_slots_per_dev = get_total_available_slots_per_dev(dev_availability)
 
     available_slots_per_dev_clone = copy.deepcopy(available_slots_per_dev.copy())
     available_slots_grouped_by_available_devs = list(set(available_slots_per_dev_clone.values()))
@@ -54,18 +55,11 @@ def get_dev_availability(devs, leave_days_per_dev, workdays):
                 start_date, end_date = leave
                 leave_range = calendar_manager.get_workdays_between(start_date, end_date)
                 for leave_day in leave_range:
-                    dev_availability[dev].remove(day_to_index(leave_day, workdays))
+                    dev_availability[dev].remove(convert_day_to_schedule_slot(leave_day, workdays))
             else:
-                dev_availability[dev].remove(day_to_index(leave, workdays))
+                dev_availability[dev].remove(convert_day_to_schedule_slot(leave, workdays))
 
     return dev_availability
 
 
-total_slots = 19
 roster_dimensions = 1
-dev_availability = {}
-
-devs = list(dev_availability.keys())
-total_available_slots_per_dev = get_total_available_slots_per_dev()
-available_devs_per_slot = get_available_devs_per_slot(total_slots)
-target_slots_per_dev = get_target_slots_per_dev(total_available_slots_per_dev)
