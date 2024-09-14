@@ -2,7 +2,7 @@ import os
 import sys
 from datetime import datetime
 import ga
-from request import ScheduleParameters
+from request import ScheduleParameters, GAParameters
 
 
 def block_print():
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     month = 9
     year = 2024
-    schedule_request = ScheduleParameters(
+    schedule_parameters = ScheduleParameters(
         schedule_start_date=datetime(year, month, 2),
         schedule_end_date=datetime(year, month, 27),
         devs=['William', 'Mokgali', 'Marco', 'Natasha', 'Juan', 'Vuyani'],
@@ -37,8 +37,17 @@ if __name__ == '__main__':
             'Natasha': [datetime(year, month, 23)],
             'Vuyani': [(datetime(year, month, 25), datetime(year, month, 27))]
         },
-        dimensions=2
+        dimensions=2,
     )
 
-    scheduler = ga.Scheduler(schedule_request)
+    # Seed 3 does pretty good
+    ga_parameters = GAParameters(
+        seed=3,
+        generations=200,
+        population_size=500,
+        crossover_rate=0.7,
+        mutation_rate=0.3,
+    )
+
+    scheduler = ga.Scheduler(schedule_parameters, ga_parameters)
     scheduler.generate_schedule()

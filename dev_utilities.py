@@ -44,7 +44,7 @@ def get_target_slots_per_dev(devs, dev_availability):
     return target_slots_per_dev
 
 
-def get_dev_availability(devs, leave_days_per_dev, workdays):
+def get_dev_availability_matrix(devs, leave_days_per_dev, workdays):
     dev_availability = {dev: [day for day in range(0, len(workdays))] for dev in devs}
 
     for dev, leave_days in leave_days_per_dev.items():

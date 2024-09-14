@@ -12,9 +12,9 @@ def get_workdays_for_year_and_month(year, month):
 
     for day in range(1, days_in_month + 1):
         weekday = datetime(year, month, day).weekday()
-
         if weekday < 5 and datetime(year, month, day) not in public_holidays:
             workdays.append(day)
+
     return workdays
 
 
