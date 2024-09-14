@@ -1,5 +1,5 @@
 import copy
-import inputs
+import dev_utilities
 from collections import Counter
 
 
@@ -8,13 +8,13 @@ class Fitness:
         self.devs = devs
         self.total_slots = total_slots
         self.available_devs_per_slot = available_devs_per_slot
-        self.target_slots_per_dev = inputs.get_target_slots_per_dev(devs, dev_availability)
+        self.target_slots_per_dev = dev_utilities.get_target_slots_per_dev(devs, dev_availability)
 
-    def fitness_func(self, primary_roster):
+    def fitness_func(self, schedule):
         penalty = 0
-        penalty += self.penalties_for_load(primary_roster)
-        penalty += self.penalties_for_preference(primary_roster)
-        penalty += self.penalties_for_spread(primary_roster)
+        penalty += self.penalties_for_load(schedule)
+        penalty += self.penalties_for_preference(schedule)
+        penalty += self.penalties_for_spread(schedule)
         return penalty
 
     def penalties_for_load(self, primary_roster, weight=1):

@@ -1,8 +1,6 @@
 import random
 from deap import creator, base, tools, algorithms
 import fitness
-import inputs
-
 
 # Seed 3 does pretty good
 seed = 3
@@ -13,12 +11,10 @@ mutation_rate = 0.3
 
 
 class Scheduler:
-    def __init__(self, total_slots, devs, dev_availability):
-        self.total_slots = total_slots
-        self.devs = devs
-        self.dev_availability = dev_availability
-        self.available_devs_per_slot = inputs.get_available_devs_per_slot(total_slots, dev_availability)
-        self.fitness = fitness.Fitness(total_slots, devs, dev_availability, self.available_devs_per_slot)
+    def __init__(self, schedule_request):
+        self.schedule_request = schedule_request
+        self.fitness = fitness.Fitness(schedule_request.total_slots, schedule_request.devs, schedule_request.dev_availability,
+                                       schedule_request.available_devs_per_slot)
 
         random.seed(seed)
         creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
@@ -26,16 +22,15 @@ class Scheduler:
 
     def evaluate(self, individual):
         roster = self.fitness.chromosome_to_roster(individual)
-        penalty = self.fitness.fitness_func(roster)
-        # print('Roster:', roster)
-        # print('Fitness:', penalty)
-        return penalty,
+        individual_fitness = self.fitness.fitness_func(roster)
+        return individual_fitness,
 
     def run_ga(self):
         toolbox = base.Toolbox()
 
         toolbox.register("attr_bool", random.randint, 0, 255)
-        toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=self.total_slots)
+        toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool,
+                         n=self.schedule_request.total_slots)
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
         toolbox.register("evaluate", self.evaluate)
@@ -59,14 +54,14 @@ class Scheduler:
         print('Best fitness:', best_fitness)
         return best_roster
 
-    def generate_roster(self):
+    def generate_schedule(self):
         final_roster = []
-        for dimension in range(0, inputs.roster_dimensions):
+        for dimension in range(0, self.schedule_request.dimensions):
             single_dimension_roster = self.run_ga()
             for slot in range(0, len(single_dimension_roster)):
                 dev = single_dimension_roster[slot]
                 if dev is None:
                     continue
-                self.available_devs_per_slot[slot].remove(dev)
+                self.schedule_request.available_devs_per_slot[slot].remove(dev)
             final_roster.append(single_dimension_roster)
         print('Best multi-dimensional roster:', final_roster)
