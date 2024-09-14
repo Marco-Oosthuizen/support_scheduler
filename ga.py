@@ -2,7 +2,7 @@ import random
 from deap import creator, base, tools, algorithms
 import fitness
 import inputs
-from inputs import total_days
+from inputs import total_slots
 
 
 # Seed 3 does pretty good
@@ -31,7 +31,7 @@ def run_ga():
     toolbox = base.Toolbox()
 
     toolbox.register("attr_bool", random.randint, 0, 255)
-    toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=total_days)
+    toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=total_slots)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
     toolbox.register("evaluate", evaluate)
@@ -61,10 +61,10 @@ def generate_roster():
     setup_ga()
     for dimension in range(0, inputs.roster_dimensions):
         single_dimension_roster = run_ga()
-        for day in range(0, len(single_dimension_roster)):
-            dev = single_dimension_roster[day]
+        for slot in range(0, len(single_dimension_roster)):
+            dev = single_dimension_roster[slot]
             if dev is None:
                 continue
-            inputs.available_devs_per_day[day].remove(dev)
+            inputs.available_devs_per_slot[slot].remove(dev)
         final_roster.append(single_dimension_roster)
     print('Best multi-dimensional roster:', final_roster)

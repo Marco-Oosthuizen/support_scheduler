@@ -12,12 +12,12 @@ def fitness_func(primary_roster):
 
 
 def penalties_for_load(primary_roster, weight=1):
-    allocated_days_per_dev = dict(Counter(primary_roster))
+    allocated_slots_per_dev = dict(Counter(primary_roster))
     penalty = 0
-    for dev, allocated_support_days in allocated_days_per_dev.items():
+    for dev, allocated_support_slots in allocated_slots_per_dev.items():
         if dev is None:
             continue
-        penalty += abs(allocated_support_days - inputs.target_days_per_dev[dev])
+        penalty += abs(allocated_support_slots - inputs.target_slots_per_dev[dev])
     return penalty * weight
 
 
@@ -32,27 +32,27 @@ def penalties_for_spread(primary_roster, weight=0.5):
     penalty = 0
     ideal_spread = len(inputs.devs)
     for dev in inputs.devs:
-        last_support_day = -1
-        for current_day, name in enumerate(primary_roster):
+        last_support_slot = -1
+        for current_slot, name in enumerate(primary_roster):
             if name == dev:
-                if last_support_day > -1:
-                    current_spread = current_day - last_support_day
+                if last_support_slot > -1:
+                    current_spread = current_slot - last_support_slot
                     penalty += 0 if current_spread >= ideal_spread else (ideal_spread - current_spread)
-                last_support_day = current_day
+                last_support_slot = current_slot
     return penalty * weight
 
 
 def chromosome_to_roster(chromosome):
     roster = []
-    available_devs_per_day = copy.deepcopy(inputs.available_devs_per_day)
+    available_devs_per_slot = copy.deepcopy(inputs.available_devs_per_slot)
     for index in range(0, len(chromosome)):
         codon = chromosome[index]
-        available_devs = len(available_devs_per_day[index])
+        available_devs = len(available_devs_per_slot[index])
         if available_devs == 0:
             roster.append(None)
             continue
-        dev = available_devs_per_day[index].pop(codon % available_devs)
+        dev = available_devs_per_slot[index].pop(codon % available_devs)
         roster.append(dev)
-        if index == inputs.total_days:
+        if index == inputs.total_slots:
             break
     return roster
