@@ -1,17 +1,17 @@
-import calendar_utilities
-from calendar_utilities import get_schedule_slot_for_date
+from utilities import calendar_utilities
+from utilities.calendar_utilities import get_schedule_slot_for_date
 
 
-def get_total_available_slots_per_dev(dev_availability):
-    available_slots_per_dev = dict(dev_availability)
+def get_total_available_slots_per_dev(dev_availability_matrix):
+    available_slots_per_dev = dict(dev_availability_matrix)
     for dev, slots in available_slots_per_dev.items():
         available_slots_per_dev[dev] = len(slots)
     return available_slots_per_dev
 
 
-def get_available_devs_per_slot(total_slots, dev_availability):
+def get_available_devs_per_slot(total_slots, dev_availability_matrix):
     available_devs_per_slot = {}
-    for dev, slots in dev_availability.items():
+    for dev, slots in dev_availability_matrix.items():
         for slot in slots:
             if slot not in available_devs_per_slot:
                 available_devs_per_slot[slot] = []
@@ -26,9 +26,9 @@ def get_available_devs_per_slot(total_slots, dev_availability):
     return available_devs_per_slot_sorted_by_slot
 
 
-def get_target_slots_per_dev(devs, dev_availability):
+def get_target_slots_per_dev(devs, dev_availability_matrix):
     target_slots_per_dev = {dev: 0 for dev in devs}
-    available_slots_per_dev = get_total_available_slots_per_dev(dev_availability)
+    available_slots_per_dev = get_total_available_slots_per_dev(dev_availability_matrix)
 
     available_slots_grouped_by_available_devs = list(set(available_slots_per_dev.values()))
     available_slots_grouped_by_available_devs.sort()

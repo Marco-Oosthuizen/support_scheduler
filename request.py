@@ -1,5 +1,4 @@
-import dev_utilities
-import calendar_utilities
+from utilities import dev_utilities, calendar_utilities
 
 
 class ScheduleParameters:
@@ -11,9 +10,9 @@ class ScheduleParameters:
 
         self.devs = devs
         self.dev_leave_days = dev_leave_days
-        self.dev_availability = dev_utilities.get_dev_availability_matrix(devs, dev_leave_days, self.workdays)
+        self.dev_availability_matrix = dev_utilities.get_dev_availability_matrix(devs, dev_leave_days, self.workdays)
         self.available_devs_per_slot = dev_utilities.get_available_devs_per_slot(self.total_slots,
-                                                                                 self.dev_availability)
+                                                                                 self.dev_availability_matrix)
 
         self.dimensions = dimensions
 
