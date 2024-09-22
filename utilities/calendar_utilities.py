@@ -32,3 +32,7 @@ def get_workdays_between(start_date, end_date, return_as_num=False):
 
 def get_schedule_slot_for_date(date, workdays):
     return workdays.index(date)
+
+
+def get_date_for_schedule_slot(slot, workdays):
+    return workdays[slot]
