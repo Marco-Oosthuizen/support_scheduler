@@ -1,7 +1,7 @@
 import random
 from deap import creator, base, tools, algorithms
 import fitness
-import io_utilities
+from utilities import io_utilities
 
 
 class Scheduler:

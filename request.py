@@ -1,5 +1,4 @@
-import dev_utilities
-import calendar_utilities
+from utilities import dev_utilities, calendar_utilities
 
 
 class ScheduleParameters:

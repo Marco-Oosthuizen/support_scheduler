@@ -1,4 +1,4 @@
-import calendar_utilities
+from utilities import calendar_utilities
 
 
 def print_schedule(schedule, workdays):
@@ -6,6 +6,7 @@ def print_schedule(schedule, workdays):
     total_days = len(schedule[0])
     vertical_margins = '-------------------------------------------------'
 
+    print('\n\n')
     print(vertical_margins)
     for day in range(0, total_days):
         date = calendar_utilities.get_date_for_schedule_slot(day, workdays)
