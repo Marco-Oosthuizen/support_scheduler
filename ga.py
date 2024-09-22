@@ -1,13 +1,14 @@
 import random
 from deap import creator, base, tools, algorithms
 import fitness
+import io_utilities
 
 
 class Scheduler:
     def __init__(self, schedule_parameters, ga_parameters):
         self.schedule_params = schedule_parameters
-        self.fitness = fitness.Fitness(schedule_parameters.total_slots, schedule_parameters.devs, 
-                                       schedule_parameters.dev_availability, 
+        self.fitness = fitness.Fitness(schedule_parameters.total_slots, schedule_parameters.devs,
+                                       schedule_parameters.dev_availability_matrix,
                                        schedule_parameters.available_devs_per_slot)
 
         self.ga_params = ga_parameters
@@ -61,4 +62,4 @@ class Scheduler:
                     continue
                 self.schedule_params.available_devs_per_slot[slot].remove(dev)
             final_schedule.append(single_dimension_schedule)
-        print('Best multi-dimensional schedule:', final_schedule)
+        io_utilities.print_schedule(final_schedule, self.schedule_params.workdays)
