@@ -4,7 +4,7 @@ This is a simple Genetic Algorithm that allocates developers to a fair support s
 ## Basic usage
 - Modify the `ScheduleParameters` object in the main method in `main.py` to suit the needs of the schedule to be generated, and run the program.
 - The `seed` in the `GAParameters` object can be swapped to anything to produce different schedules.
-- The lower the score of the produced schedule, the more optimized it is (and the less constraints it violates).
+- The lower the fitness of the produced schedule, the more optimized it is (and the less constraints it violates).
 
 ## Schedule Parameters
 |Variable|Description|
