@@ -1,4 +1,4 @@
-from utilities import dev_utilities, calendar_utilities
+from support_scheduler.utilities import calendar_utilities, dev_utilities
 
 
 class ScheduleParameters:
