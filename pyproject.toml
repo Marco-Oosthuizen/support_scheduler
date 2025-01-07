@@ -1,0 +1,14 @@
+[project]
+name = "support_scheduler"
+version = "0.1"
+dependencies = [
+    "deap==1.4.1",
+    "holidays==0.55",
+    "numpy==2.0.1",
+    "python-dateutil==2.9.0.post0",
+    "six==1.16.0",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
