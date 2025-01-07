@@ -1,5 +1,5 @@
-from utilities import calendar_utilities
-from utilities.calendar_utilities import get_schedule_slot_for_date
+from support_scheduler.utilities import calendar_utilities
+from support_scheduler.utilities.calendar_utilities import get_schedule_slot_for_date
 
 
 def get_total_available_slots_per_dev(dev_availability_matrix):

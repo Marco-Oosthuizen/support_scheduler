@@ -1,4 +1,4 @@
-from utilities import calendar_utilities
+from support_scheduler.utilities import calendar_utilities
 
 
 def print_schedule(schedule, workdays):
