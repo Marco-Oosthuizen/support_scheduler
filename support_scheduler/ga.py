@@ -63,3 +63,4 @@ class Scheduler:
                 self.schedule_params.available_devs_per_slot[slot].remove(dev)
             final_schedule.append(single_dimension_schedule)
         io_utilities.print_schedule(final_schedule, self.schedule_params.workdays)
+        return io_utilities.get_formatted_schedule(final_schedule, self.schedule_params.workdays)
