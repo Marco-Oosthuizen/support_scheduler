@@ -1,6 +1,6 @@
 import copy
-from utilities import dev_utilities
 from collections import Counter
+from support_scheduler.utilities import dev_utilities
 
 
 class Fitness:
