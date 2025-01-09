@@ -3,6 +3,9 @@ from deap import creator, base, tools, algorithms
 from support_scheduler import fitness
 from support_scheduler.utilities import io_utilities
 
+creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+creator.create("Individual", list, fitness=creator.FitnessMin)
+
 
 class Scheduler:
     def __init__(self, schedule_parameters, ga_parameters):
@@ -14,8 +17,6 @@ class Scheduler:
         self.ga_params = ga_parameters
 
         random.seed(self.ga_params.seed)
-        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
-        creator.create("Individual", list, fitness=creator.FitnessMin)
 
     def evaluate(self, individual):
         schedule = self.fitness.chromosome_to_schedule(individual)
