@@ -30,6 +30,10 @@ def get_workdays_between(start_date, end_date, return_as_num=False):
     return len(workdays) if return_as_num else workdays
 
 
+def is_workday(date):
+    return date.weekday() < 5 and date not in public_holidays
+
+
 def get_schedule_slot_for_date(date, workdays):
     return workdays.index(date)
 

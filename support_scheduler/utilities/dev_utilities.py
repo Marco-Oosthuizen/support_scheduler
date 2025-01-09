@@ -1,5 +1,5 @@
 from support_scheduler.utilities import calendar_utilities
-from support_scheduler.utilities.calendar_utilities import get_schedule_slot_for_date
+from support_scheduler.utilities.calendar_utilities import get_schedule_slot_for_date, is_workday
 
 
 def get_total_available_slots_per_dev(dev_availability_matrix):
@@ -54,7 +54,7 @@ def get_dev_availability_matrix(devs, leave_days_per_dev, workdays):
                 leave_range = calendar_utilities.get_workdays_between(start_date, end_date)
                 for leave_day in leave_range:
                     dev_availability[dev].remove(get_schedule_slot_for_date(leave_day, workdays))
-            else:
+            elif is_workday(leave):
                 dev_availability[dev].remove(get_schedule_slot_for_date(leave, workdays))
 
     return dev_availability
