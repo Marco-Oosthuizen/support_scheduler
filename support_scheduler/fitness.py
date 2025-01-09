@@ -4,11 +4,12 @@ from support_scheduler.utilities import dev_utilities
 
 
 class Fitness:
-    def __init__(self, total_slots, devs, dev_availability, available_devs_per_slot):
+    def __init__(self, total_slots, devs, dev_availability, available_devs_per_slot, dev_preferred_slots):
         self.devs = devs
         self.total_slots = total_slots
         self.available_devs_per_slot = available_devs_per_slot
         self.target_slots_per_dev = dev_utilities.get_target_slots_per_dev(devs, dev_availability)
+        self.dev_preferred_slots = dev_preferred_slots
 
     def fitness_func(self, schedule):
         penalty = 0
@@ -18,18 +19,33 @@ class Fitness:
         return penalty
 
     def penalties_for_load(self, primary_schedule, weight=1):
-        allocated_slots_per_dev = dict(Counter(primary_schedule))
         penalty = 0
+        allocated_slots_per_dev = dict(Counter(primary_schedule))
         for dev, allocated_support_slots in allocated_slots_per_dev.items():
             if dev is None:
                 continue
             penalty += abs(allocated_support_slots - self.target_slots_per_dev[dev])
         return penalty * weight
 
+    # def penalties_for_preference_old(self, primary_schedule, weight=2):
+    #     preferred_indices = [2, 3, 7, 8, 12, 13, 17]
+    #     juan_indices = [index for index, dev in enumerate(primary_schedule) if dev == 'Juan']
+    #     penalty = len([actual_index for actual_index in juan_indices if actual_index not in preferred_indices])
+    #     return penalty * weight
+
     def penalties_for_preference(self, primary_schedule, weight=2):
-        preferred_indices = [2, 3, 7, 8, 12, 13, 17]
-        juan_indices = [index for index, dev in enumerate(primary_schedule) if dev == 'Juan']
-        penalty = len([actual_index for actual_index in juan_indices if actual_index not in preferred_indices])
+        penalty = 0
+        for dev in self.devs:
+            if dev not in self.dev_preferred_slots:
+                continue
+            preferred_indices = self.dev_preferred_slots[dev]
+            allocated_indices = [index for index, dev_for_index in enumerate(primary_schedule) if dev_for_index == dev]
+            amount_of_indices_on_preferred_index = len([allocated_index for allocated_index in allocated_indices if allocated_index in preferred_indices])
+            if self.target_slots_per_dev[dev] > len(preferred_indices):
+                penalty += len(preferred_indices) - amount_of_indices_on_preferred_index
+            else:
+                penalty += self.target_slots_per_dev[dev] - amount_of_indices_on_preferred_index
+
         return penalty * weight
 
     def penalties_for_spread(self, primary_schedule, weight=0.5):

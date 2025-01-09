@@ -44,6 +44,16 @@ def get_target_slots_per_dev(devs, dev_availability_matrix):
     return target_slots_per_dev
 
 
+def get_dev_preferred_slots(dev_preferred_days, dev_availability_matrix, workdays):
+    dev_preferred_slots = {}
+    for dev, preferred_days in dev_preferred_days.items():
+        dev_preferred_slots[dev] = [slot for day in preferred_days
+                                    if (is_workday(day) and
+                                        (slot := get_schedule_slot_for_date(day, workdays)) in dev_availability_matrix[
+                                            dev])]
+    return dev_preferred_slots
+
+
 def get_dev_availability_matrix(devs, leave_days_per_dev, workdays):
     dev_availability = {dev: [day for day in range(0, len(workdays))] for dev in devs}
 

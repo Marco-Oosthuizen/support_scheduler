@@ -12,7 +12,8 @@ class Scheduler:
         self.schedule_params = schedule_parameters
         self.fitness = fitness.Fitness(schedule_parameters.total_slots, schedule_parameters.devs,
                                        schedule_parameters.dev_availability_matrix,
-                                       schedule_parameters.available_devs_per_slot)
+                                       schedule_parameters.available_devs_per_slot,
+                                       schedule_parameters.dev_preferred_slots)
 
         self.ga_params = ga_parameters
 
