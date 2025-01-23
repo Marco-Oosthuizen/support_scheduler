@@ -36,12 +36,15 @@ if __name__ == '__main__':
             'Toad': [datetime(year, month, 23)],
             'Yoshi': [datetime(year, month, 23)],
         },
+        dev_preferred_days={
+            'Mario': [datetime(year, month, 6)],
+        },
         dimensions=1,
     )
 
     # Change the seed to explore different results
     ga_parameters = GAParameters(
-        seed=3,
+        seed=10,
         generations=200,
         population_size=500,
         crossover_rate=0.7,
